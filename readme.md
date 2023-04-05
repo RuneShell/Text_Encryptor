@@ -9,10 +9,10 @@ Please feel free to tell me your opinion when you:
 -   have any other feedback
     
 ## Brief
- encrypt unicode string in text file using the FNV hash function with a password.<br>
-support encoding: utf-8
+Encrypt unicode string in text file using the FNV hash function with a password.<br>
+Support encoding: utf-8
 
-simplified explanation: to be added someday
+Simplified explanation: to be added someday
 
 ## Features
 - Remains language type when encrypted (currently support only Digits, Basic symbols, English, Korean)
