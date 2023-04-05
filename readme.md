@@ -23,7 +23,7 @@ simplified explanation: to be added someday
     * Hangul Compatability Jamo (ㄱㄴㄷ -> ㆌㄱㅶ)
     * other letters: ignore
 - Provides options on letters to encrypt or not to encrypt (currently support only whitespace, horizontal tab) 
-- 
+
 #### Samples
 -------------------------------------------------------
 In folder 'test',
