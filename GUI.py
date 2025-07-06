@@ -10,6 +10,8 @@ from PyQt5.QtGui import QFont, QPainter, QColor, QPixmap, QFontMetrics
 # QTimer, QRect, QPainter, QPixmap, QColor, QFontMetrics for Glitch Animation  
 import base64
 
+import CeasorHash
+print(dir(CeasorHash))
 
 
 # Colors
@@ -48,7 +50,7 @@ class TitleBar(QWidget):
 
     def AddUI(self):
         self.titleBox_layout = QHBoxLayout()
-        self.title = GlitchLabel(110, 20, QFont(main_font, 10, QFont.Bold),"Glitch Encoder", 1)
+        self.title = GlitchLabel(130, 20, QFont(main_font, 10, QFont.Bold),"Glitch Encoder", 1)
         self.titleBox_layout.addWidget(self.title)
         self.titleBox_layout.addStretch()
 
@@ -200,6 +202,9 @@ class TestWindow(QWidget):
     __encode_modeList = [ "Base64", "Unnamed", "Hint" ]
     small_font = QFont('Arial', 8)
 
+    __ceasorHash = CeasorHash.CeasorHash()
+    __coded_str = ""
+
     def __init__(self):
         super().__init__()
         self.AddUI()
@@ -231,6 +236,7 @@ class TestWindow(QWidget):
         self.encode_btn = QPushButton("🔒Encode")
         self.decode_btn = QPushButton("🔑Decode")
         self.output_text = GlitchLabel(200, 30, QFont(main_font, 22, QFont.Bold),"Glitch Text", 1) # Pinpoint  멀미날거같아서 1로 줄임
+        self.copy_btn = QPushButton("copy")
         self.output_status_text = QLabel("Idle")
 
         encodeBox_layout = QVBoxLayout(encodeBox)
@@ -240,6 +246,7 @@ class TestWindow(QWidget):
             self.encode_btn,
             self.decode_btn,
             self.output_text,
+            self.copy_btn
             #self.output_status_text
         ]
         for encodeBox_widget in self.encodeBox_widgets:
@@ -271,6 +278,7 @@ class TestWindow(QWidget):
 
         self.encode_btn.clicked.connect(self.EncodeNavigator)
         self.decode_btn.clicked.connect(self.DecodeNavigator)
+        self.copy_btn.clicked.connect(lambda: self.CopyToClipboard(self.output_text.text))
 
         self.output_text.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
@@ -288,6 +296,7 @@ class TestWindow(QWidget):
         
         self.input_text.setObjectName("input_text")
         self.output_text.setObjectName("output_text")
+        self.copy_btn.setFixedHeight(30)
 
         # Concept: glitch, distopia, terminal
         self.setStyleSheet(f"""\
@@ -376,6 +385,11 @@ class TestWindow(QWidget):
             decodedMode = 2
         #self.output_status_text.setText("Decoded: " + self.__encode_modeList[decodedMode])
 
+    def CopyToClipboard(self, text):
+        clipboard = QApplication.clipboard()
+        clipboard.setText(text)
+
+
 
     # Encode/Decode methods. mode=1(Encode), mode=0(Decode)
     def Encode_Base64(self, mode: bool):
@@ -393,11 +407,21 @@ class TestWindow(QWidget):
             else:
                 coded_data = coded_data.decode("utf-8")
 
+        self.__coded_str = coded_data
         self.output_text.ChangeText(coded_data)
 
     def Encode_Unnamed(self, mode: bool):
         raw_data = self.input_text.text()
-        self.output_text.ChangeText(raw_data)
+        raw_pw = self.input_password.text()
+        coded_data = list(raw_data.encode("utf-8"))
+        coded_pw = list(raw_pw.encode("utf-8"))
+
+        coded_data = self.__ceasorHash.EncryptWithCeasorHash(coded_data, coded_pw, mode, 1)
+        
+        self.__coded_str = coded_data
+        self.output_text.ChangeText(bytes(coded_data).decode("utf-8"))
+
+
 
     def Encode_Hint(self, mode: bool):
         self.output_text.setText(self.input_text.text())

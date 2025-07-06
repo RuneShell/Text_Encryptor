@@ -10,6 +10,7 @@
 */
 
 #pragma once
+#define UNICODE_INFO_HH
 /* 
 ======= Unicode Letters to Encrypt ======= 
 	< 1 Byte > 
@@ -43,7 +44,7 @@ all other letters
 
 /* options */
 #define IS_ENC_HTAB false //is encrypt horizontal tab
-#define IS_ENC_SPACE true //is encrypt whitespace
+#define IS_ENC_SPACE false //is encrypt whitespace
 
 
 
@@ -64,9 +65,9 @@ all other letters
 /*-----------------------------------*/
 /*	< Byte 1>  */
 #define HORIZONTAL_TAB 0x09
-#if IS_ENC_SPACE true
+#if IS_ENC_SPACE
 #define BYTE1_START 0x20
-#elif
+#else
 #define BYTE1_START 0x21
 #endif
 #define BYTE1_END 0x7E
