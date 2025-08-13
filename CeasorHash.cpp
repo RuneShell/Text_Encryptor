@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include <vector>
 #include <string>
@@ -81,14 +82,12 @@ class WaterHash{
 
 
 public:
-    std::vector<uint32_t> GetHashSeq(const std::vector<dataN>& key, const int maskSize){
+    std::vector<uint32_t> GetHashSeq(const dataN* keyI, const int keySize, const int maskSize){
         std::vector<uint32_t> mask(maskSize, 0);
-
-        const dataN* keyI = key.data();
 
         int counter = 0;
         for(int i = 0; i < maskSize; i++){
-            mask[i] = waterhash(keyI, key.size(), seed ^ (counter+i));
+            mask[i] = waterhash(keyI, keySize, seed ^ (counter+i));
         }
 
         return mask;
@@ -114,13 +113,6 @@ private:
             GETXOR_IV ^= *vb;
         }
         return GETXOR_IV;
-    };
-
-    std::function<void(std::vector<dataN>&, const std::vector<maskN>&)> NXOR = \
-    [](std::vector<dataN>& data, const std::vector<maskN>& mask){
-        for(int i = 0; i < data.size(); i++){
-            data[i] = data[i] ^ (mask[i] & 0b11111); // Assume that all Unicode domain size MUST greater than 32.
-        }
     };
 
     std::function<dataN(dataN, maskN, rangeN, rangeN)> EncryptRange = [](dataN x, maskN n, rangeN a, rangeN b){ return (x - a + n) % (b - a + 1) + a; };
@@ -164,17 +156,20 @@ private:
 
     // [Core Methods]
     // 1. Generate Mask
-    std::vector<maskN> GenerateMask(const std::vector<dataN>& data, const std::vector<dataN>& key, int maskSize){
+    //std::vector<maskN> GenerateMask(const std::vector<dataN>& data, const std::vector<dataN>::iterator& keyBegin, const std::vector<dataN>::iterator& keyEnd, int maskSize){
+    // If first parameter 'data' effect on mask, cannot find the same pattern in encrypted text. => disabled
+    std::vector<maskN> GenerateMask(const std::vector<dataN>::iterator& keyBegin, const std::vector<dataN>::iterator& keyEnd, int maskSize){
         maskSize += (16 - maskSize%16) % 16; // For round system, maskSize must devided into 16.
 
-        uint32_t keyXOR = GetXOR(key.begin(), key.end()); // Get XOR with key
+        uint32_t keyXOR = GetXOR(keyBegin, keyEnd); // Get XOR with key
         WaterHash waterHash{};
-        std::vector<maskN> mask = waterHash.GetHashSeq(key, maskSize); // generate wyHash sequence with key
+        std::vector<maskN> mask = waterHash.GetHashSeq(&(*keyBegin), std::distance(keyBegin, keyEnd), maskSize); // generate wyHash sequence with key
 
         std::for_each(mask.begin(), mask.end(), [keyXOR](maskN& m){return m ^= keyXOR;}); // apply mask element-wise XOR with keyXOR
 
         uint32_t dataXOR;
         std::vector<maskN>::iterator partialMaskbegin = mask.begin(); // !!! NOT using [data], data is different when enc and dec => mask only depend on password. => mask can be predictable
+        
         for(int i = 0; i < maskSize/16; i++){ // Feistel-like shuffle
             dataXOR = GetXOR(partialMaskbegin, partialMaskbegin+16);
             CeasorHashRound(partialMaskbegin, ((dataXOR>>6) & 0b11) + 5, ((dataXOR>>4) & 0b11) + 5, (dataXOR>>2) & 0b11, dataXOR & 0b11);
@@ -254,9 +249,35 @@ public:
         }
 
 
+        // add something to key that retains in plaintext.
+        // 1. Plaintext Size
+        key.push_back(data.size());
+        // 2. Plaintext Unicode Domain Pattern(to complete this, I should change entire structure, so later...)
+        //...
+        
+
+        // Devide Key 'sentence' into words.
+        std::vector<dataN>::iterator keyBegin = key.begin();
+        std::vector<dataN>::iterator keyEnd = std::find(keyBegin, key.end(), 0x20);  // 0x20: whitespace in ASCII code
+        std::vector<maskN> mask = GenerateMask(keyBegin, keyEnd, data.size());
+        if(keyEnd != key.end()) keyBegin = keyEnd + 1;
+
+        while(true){
+            keyEnd = std::find(keyBegin, key.end(), 0x20);
+            if(keyEnd == key.end()) break;
+
+            std::vector<maskN> tempMask = GenerateMask(keyBegin, keyEnd, data.size());
+            if(GetXOR(keyBegin, keyEnd) & 1){ // ADD to mask
+                std::transform(mask.begin(), mask.end(), tempMask.begin(), mask.begin(), [](const int& a, const int& b){return a+b;});
+            }
+            else{ // XOR to mask
+                std::transform(mask.begin(), mask.end(), tempMask.begin(), mask.begin(), [](const int& a, const int& b){return a^b;});
+            }
+            keyBegin = keyEnd + 1;
+        }
+
+        
         // unicode
-        const std::vector<uint32_t> mask = GenerateMask(data, key, data.size());
-        NXOR(data, mask);
         ModulusData(data, mask, encMode);
 
 
@@ -272,15 +293,17 @@ public:
 };
 
 /* For test
-int main(){
-    std::vector<dataN> data = {235, 143, 153, 237, 149, 180, 235, 172, 188, 234, 179, 188, 32, 235, 176, 177, 235, 145, 144, 236, 130, 176, 236, 157, 180};
-    std::vector<dataN> pw = {112, 119};
+int main() {
+    std::vector<dataN> data = { 97, 115, 99 };
+    std::vector<dataN> pw = { 112, 119 };
     CeasorHash c{};
-    c.EncryptWithCeasorHash(data, pw, 1, 2);
+
+    c.EncryptWithCeasorHash(data, pw, 1, 1);
     for(const auto e: data) std::cout << e << ' ';
     std::cout << '\n';
 
-    c.EncryptWithCeasorHash(data, pw, 0, 2);
-    for(const auto e: data) std::cout << e << ' ';
+    c.EncryptWithCeasorHash(data, pw, 0, 1);
+    for (const auto e : data) std::cout << e << ' ';
     std::cout << '\n';
-}*/
+}
+*/

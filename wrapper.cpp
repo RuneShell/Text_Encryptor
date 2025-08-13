@@ -1,22 +1,32 @@
+#include <cstdint>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 //#include "C:\Users\Computer\AppData\Local\Programs\Python\Python310\Lib\site-packages\pybind11\include\pybind11\pybind11.h"
 //#include "C:\Users\Computer\AppData\Local\Programs\Python\Python310\Lib\site-packages\pybind11\include\pybind11\stl.h"
 
-#include "encrypt_with_fnv.hh"
+#include "CeasorHash.cpp"
 
 namespace py = pybind11;
 
 PYBIND11_MODULE(CeasorHash, m){
     m.doc() = "made by RuneShell";
 
-    py::class_<EncryptWithFNV1A>(m, "EncryptWithFNV1A")
+    py::class_<CeasorHash>(m, "CeasorHash")
         .def(py::init<>())
 
-        .def("EncryptUTF8Data", 
-            [](EncryptWithFNV1A &self, std::vector<unsigned char> data, std::string key="", bool mode=true){ self.EncryptUTF8Data(data, key, mode); return data; },
-            py::arg("data: std::vector<unsigned char>&"), py::arg("key: std::string")="", py::arg("encrypt_mode: bool")=1, 
-            "Encrypt/Decrypt byte sequence with options(1: Encrypt, 0: Decrypt). Default key=\"\", mode=1");
+        .def("EncryptWithCeasorHash", 
+            // Python: list(int) -> Cpp: std::vector<uint32_t>
+            [](CeasorHash &self, std::vector<uint32_t> data, std::vector<uint32_t> key={}, const bool mode=true, const int dataType=1){ 
+                self.EncryptWithCeasorHash(data, key, mode, dataType); return data; },
+                py::arg("data: std::vector<uint32_t>&"), 
+                py::arg("key: std::vector<uint32_t>")="", 
+                py::arg("encrypt_mode: const bool")=true, 
+                py::arg("data_type: const int")=1,
+                "Encrypt/Decrypt byte sequence with options:\n \
+                mode: (True: Encrypt, False: Decrypt)\n \
+                dataType: (1: UTF-8, 2: Unicode Point) (both 'data' and 'key')\n"
+        );
         
 }
