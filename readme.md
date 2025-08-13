@@ -1,5 +1,4 @@
 
-
 # Personal Project 5: Text Encryptor
 <strong> Warning: Experimental Algorithm</strong>
 
@@ -11,7 +10,7 @@ Encrypt string using the confused WaterHash sequences with a password.
 Support encoding: utf-8, unicode code points
 
 Blueprint:
-![blueprint.jpg]()
+![blueprint.jpg](https://github.com/RuneShell/Text_Encryptor/blob/main/samples/blueprint.jpg?raw=true)
 
 ## Features
 - Preserves character type after encrpytion. (currently support only Digits, Basic symbols, English, Korean)
@@ -25,11 +24,11 @@ Blueprint:
 
 ## Samples
 Default GUI
-![sample_1_default.gif]()
+![sample_1_default.gif](https://github.com/RuneShell/Text_Encryptor/blob/main/samples/sample_1_default.gif?raw=true)
 
 Encrypt
-![sample_2_encrypt.gif]()
+![sample_2_encrypt.gif](https://github.com/RuneShell/Text_Encryptor/blob/main/samples/sample_2_encrypt.gif?raw=true)
 
 Decrypt
-![smaple_3_decrypt.gif]()
+![smaple_3_decrypt.gif](https://github.com/RuneShell/Text_Encryptor/blob/main/samples/sample_3_decrypt.gif?raw=true)
 
