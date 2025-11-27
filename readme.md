@@ -6,7 +6,7 @@ I made it just for fun and curiosity, combining the concepts of Caesar cipher, h
 
     
 ## Brief
-Encrypt string using the confused WaterHash sequences with a password.
+Encrypt string using the confused WaterHash sequences with a password.<br>	
 Support encoding: utf-8, unicode code points
 
 Blueprint:
@@ -23,12 +23,19 @@ Blueprint:
 - Provides options to selectively encrypt certain characters. (currently supports only whitespace, horizontal tab) 
 
 ## Samples
-Default GUI
+Default GUI<br>
 ![sample_1_default.gif](https://github.com/RuneShell/Text_Encryptor/blob/main/samples/sample_1_default.gif?raw=true)
 
-Encrypt
+Encrypt<br>
 ![sample_2_encrypt.gif](https://github.com/RuneShell/Text_Encryptor/blob/main/samples/sample_2_encrypt.gif?raw=true)
 
-Decrypt
+Decrypt<br>
 ![smaple_3_decrypt.gif](https://github.com/RuneShell/Text_Encryptor/blob/main/samples/sample_3_decrypt.gif?raw=true)
 
+
+## Others
+**CopyRights**
+- [pyqt5 (GPL-3.0 License)](https://github.com/baoboa/pyqt5) - Copyright (c) Riverbank Computing Limited<br>
+	Following the GPL-3.0 License, I notify that my `GUI.py` is also under GPL-3.0 License.
+- [utf8unicode (License Undefined)](https://github.com/helayzhang/utf8unicode) - Permission to use granted via email for personal projects.
+- [Waterhash(Unlicense)](https://github.com/tommyettinger/waterhash) by Tommy Ettinger, derived from Wyhash(Unlicense) by Wang Yi.

@@ -1,3 +1,15 @@
+"""
+File: GUI.py
+Author: RuneShell
+        dlhj09@naver.com
+        https://github.com/RuneShell
+Locate: https://github.com/RuneShell/Text_Encryptor
+License: GPL-3.0 License - Copyright (c) 2025, RuneShell
+        Following GPL-3.0 License : [pyqt5] Copyright (c) Riverbank Computing Limited
+----------------------------------
+Brief: 
+"""
+
 import sys
 import random
 import base64

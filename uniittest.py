@@ -1,7 +1,13 @@
-# 2025-11-09
-# unittest.py
-# Test [CeasorHash.pyd] module using python unittest
-# https://github.com/RuneShell/Text_Encryptor
+"""
+2025-11-09
+File: unittest.py
+Author: RuneShell
+      dlhj09@naver.com
+      https://github.com/RuneShell
+Locate: https://github.com/RuneShell/Text_Encryptor
+----------------------------------
+Brief: Test [CeasorHash.pyd] module using python unittest
+"""
 
 import CeasorHash # ★ module built in python 3.10.5
 

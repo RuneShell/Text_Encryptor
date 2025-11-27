@@ -1,3 +1,14 @@
+/*
+* File: CeasorHash.cpp
+* Author: RuneShell
+*       dlhj09@naver.com
+*       https://github.com/RuneShell
+* Locate: https://github.com/RuneShell/Text_Encryptor
+* License: MPL 2.0 License - Copyright (c) 2025, RuneShell
+* ----------------------------------
+* Brief: Core Encrypt Module.
+*/
+
 #include <iostream>
 #include <chrono>
 
@@ -28,15 +39,13 @@ target_compile_definitions(mymodule PRIVATE BUILDING_PYTHON_MODULE)
 
 
 class WaterHash{
-    const uint64_t seed = 0xdab89f1c5e236771ULL; // A random number
-
     /*
-    Waterhash takes (optimally) 32-bit inputs and produces a 32-bit hash as its result.
-    It is an edited version of wyhash that uses at most 64-bit math instead of 128-bit.
-    It is meant to use very similar code to Wheathash, which produces a 64-bit hash.
-    Original Author: Wang Yi <godspeed_china@yeah.net>
-    Waterhash Variant Author: Tommy Ettinger <tommy.ettinger@gmail.com>
+    * Waterhash takes (optimally) 32-bit inputs and produces a 32-bit hash as its result.
+    * It is an edited version of wyhash that uses at most 64-bit math instead of 128-bit.
+    * Waterhash Variant Author: Tommy Ettinger <tommy.ettinger@gmail.com> (Unlicense)
+    * Wyhash Author: Wang Yi <godspeed_china@yeah.net> (Unlicense)
     */
+    const uint64_t seed = 0xdab89f1c5e236771ULL; // A random number
     const uint64_t _waterp0 = 0xa0761d65ull, _waterp1 = 0xe7037ed1ull, _waterp2 = 0x8ebc6af1ull;
     const uint64_t _waterp3 = 0x589965cdull, _waterp4 = 0x1d8e4e27ull, _waterp5 = 0xeb44accbull;
 

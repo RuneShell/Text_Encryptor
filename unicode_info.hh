@@ -1,10 +1,10 @@
 /*
 * File: unicode_info.hh
-* Author: HleeJ
+* Author: RuneShell
 *       dlhj09@naver.com
-*       https://github.com/HleeJ
-* Locate: in Personal-Project 5: Text Encryptor, included in "encrypt_with_fnv.hh"
-* 2023-04
+*       https://github.com/RuneShell
+* Locate: https://github.com/RuneShell/Text_Encryptor
+* License: MPL 2.0 License - Copyright (c) 2025, RuneShell
 * ----------------------------------
 * Brief: Unicode Code Point hex data for encrypt algorithm
 */
